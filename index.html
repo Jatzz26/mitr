@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mitर - Mental Health Support for Students</title>
+    <meta name="description" content="Anonymous, accessible mental health support platform designed for higher education students. Get 24/7 AI support, book counselor sessions, join peer groups, and access crisis resources." />
+    <meta name="author" content="mitर Team" />
+
+    <!-- Font: Inter for modern, clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Prevent theme flash: set initial theme class before app loads -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved || (prefersDark ? 'dark' : 'light');
+          var root = document.documentElement;
+          root.classList.remove('light','dark');
+          root.classList.add(theme);
+        } catch (e) {}
+      })();
+    </script>
+
+    <meta property="og:title" content="mitर - Mental Health Support for Students" />
+    <meta property="og:description" content="Anonymous, accessible mental health support platform designed for higher education students. Get 24/7 AI support, book counselor sessions, join peer groups, and access crisis resources." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@mitर_support" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <!-- Mental Health & Student Keywords -->
+    <meta name="keywords" content="mental health, student support, anonymous counseling, crisis helpline, peer support, anxiety assessment, university students, college mental health, India mental health" />
+  </head>
+
+  <body class="antialiased transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
