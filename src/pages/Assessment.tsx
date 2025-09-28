@@ -162,8 +162,8 @@ export default function Assessment() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Assessment Results</h1>
-              <p className="text-gray-600 mt-2">Your mental health insights and recommendations</p>
+              <h1 className="text-3xl font-bold text-foreground">Assessment Results</h1>
+              <p className="text-muted-foreground mt-2">Your mental health insights and recommendations</p>
             </div>
             <Button 
               onClick={resetAssessment}
@@ -484,14 +484,14 @@ export default function Assessment() {
         {/* Questions */}
         <div className="space-y-6">
           {questions.map((question, qi) => (
-            <Card key={qi} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <Card key={qi} className="border border-card-border shadow-card bg-card hover:shadow-card transition-shadow">
               <CardContent className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-xl font-semibold text-foreground mb-2">
                       {qi + 1}. {question.text}
                     </h3>
-                    <p className="text-gray-600 text-sm flex items-center space-x-2">
+                    <p className="text-muted-foreground text-sm flex items-center space-x-2">
                       <Info className="w-4 h-4" />
                       <span>{question.description}</span>
                     </p>
@@ -504,8 +504,8 @@ export default function Assessment() {
                         className={`
                           relative flex flex-col items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
                           ${answers[qi] === choice.value 
-                            ? "border-blue-500 bg-blue-50 shadow-md" 
-                            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
+                            ? "border-primary bg-primary/10 shadow-card" 
+                            : "border-card-border bg-card hover:border-card-border/80 hover:shadow-sm"
                           }
                         `}
                       >
@@ -523,14 +523,14 @@ export default function Assessment() {
                         />
                         <div 
                           className={`w-4 h-4 rounded-full mb-2 ${
-                            answers[qi] === choice.value ? "bg-blue-500" : "bg-gray-300"
+                            answers[qi] === choice.value ? "bg-primary" : "bg-muted"
                           }`}
                         />
-                        <span className="text-sm font-medium text-center text-gray-700">
+                        <span className="text-sm font-medium text-center text-foreground">
                           {choice.label}
                         </span>
                         {answers[qi] === choice.value && (
-                          <CheckCircle className="w-5 h-5 text-blue-500 absolute top-2 right-2" />
+                          <CheckCircle className="w-5 h-5 text-primary absolute top-2 right-2" />
                         )}
                       </label>
                     ))}
@@ -542,16 +542,16 @@ export default function Assessment() {
         </div>
 
         {/* Submission */}
-        <Card className="border-0 shadow-lg">
+        <Card className="border border-card-border bg-card shadow-card">
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
               <div className="text-center sm:text-left">
                 {score !== null ? (
                   <div className="space-y-1">
-                    <p className="text-lg font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-foreground">
                       Your Score: <span style={{ color: getSeverityColor(severity) }}>{score}</span>
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       Severity: <Badge 
                         style={{ 
                           backgroundColor: getSeverityColor(severity),
@@ -563,7 +563,7 @@ export default function Assessment() {
                     </p>
                   </div>
                 ) : (
-                  <p className="text-gray-600">Complete all questions to see your score</p>
+                  <p className="text-muted-foreground">Complete all questions to see your score</p>
                 )}
               </div>
               <Button 

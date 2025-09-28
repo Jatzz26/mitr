@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { X, Flame, Eraser, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabaseClient";
+import { useAuth } from "@/components/AuthProvider";
 
 interface ReleaseLetGoProps {
   open: boolean;
@@ -8,6 +11,8 @@ interface ReleaseLetGoProps {
 }
 
 export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [text, setText] = useState("");
   const [isBurning, setIsBurning] = useState(false);
   const [isBurned, setIsBurned] = useState(false);
@@ -16,6 +21,8 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
   const paperRef = useRef<HTMLDivElement | null>(null);
   const [showAshes, setShowAshes] = useState(false);
   const [showSprout, setShowSprout] = useState(false);
+  const [newThought, setNewThought] = useState("");
+  const [saving, setSaving] = useState(false);
   const ytPlayerRef = useRef<any>(null);
   const ytReadyRef = useRef<boolean>(false);
 
@@ -33,6 +40,7 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
       setIsBurning(false);
       setIsBurned(false);
       setText("");
+      setNewThought("");
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -42,6 +50,41 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
       }
     }
   }, [open]);
+
+  const saveNewThought = async () => {
+    const content = newThought.trim();
+    if (!content) {
+      toast({ title: "Write a new thought", description: "Please jot a new, kinder thought before saving.", variant: "default" });
+      return;
+    }
+    if (!user) {
+      toast({ title: "Please sign in", description: "Sign in to save your thought to Journal.", variant: "destructive" });
+      return;
+    }
+    setSaving(true);
+    try {
+      // Try inserting with optional columns first
+      const base: any = {
+        user_id: user.id,
+        title: "New Thought (Release & Let Go)",
+        content,
+        book: "Wellness Journal",
+        tags: ["release", "reframe"],
+      };
+      let { error } = await supabase.from("journals").insert(base);
+      if (error && /column .* book/.test(error.message)) {
+        const { error: e2 } = await supabase.from("journals").insert({ user_id: user.id, title: base.title, content: base.content } as any);
+        error = e2 as any;
+      }
+      if (error) throw error;
+      toast({ title: "Saved to Journal" });
+      setNewThought("");
+    } catch (e: any) {
+      toast({ title: "Save failed", description: e?.message || "Please try again.", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Load YouTube IFrame API and prepare player for sound-only playback
   useEffect(() => {
@@ -161,7 +204,9 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
                   {/* Flames overlay and ash during burn */}
                   {isBurning && (
                     <div className="pointer-events-none absolute inset-0 rounded-2xl overflow-hidden">
+                      {/* flame */}
                       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-4xl animate-[flicker_1s_ease-in-out_infinite]">🔥</div>
+                      {/* ash particles */}
                       {ashes.map(a => (
                         <span
                           key={a.id}
@@ -175,20 +220,23 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
                           }}
                         />
                       ))}
+                      {/* smoke overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-black/10 to-black/20 animate-[smokeDrift_4s_ease-in-out_infinite] mix-blend-multiply" />
                     </div>
                   )}
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" className="gap-2" onClick={() => setText("")}> 
+                    <Button type="button" variant="outline" className="gap-2" onClick={() => setText("")}> 
                       <Eraser className="w-4 h-4"/> Clear
                     </Button>
-                    <Button onClick={handleBurn} className="gap-2">
+                    <Button type="button" onClick={(e)=>{ e.preventDefault(); handleBurn(); }} className="gap-2">
                       <Flame className="w-4 h-4"/> Burn Paper
                     </Button>
                   </div>
                   <button
+                    type="button"
                     onClick={() => setSoundOn((s)=>!s)}
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
                     aria-pressed={soundOn}
@@ -222,10 +270,13 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
                   <textarea
                     placeholder="A new thought…"
                     className="w-full min-h-[90px] rounded-xl border border-card-border bg-background p-3"
+                    value={newThought}
+                    onChange={(e)=>setNewThought(e.target.value)}
                   />
                 </div>
-                <div className="pt-1">
-                  <Button onClick={onClose} className="rounded-xl">Close</Button>
+                <div className="pt-1 flex items-center justify-center gap-2">
+                  <Button type="button" variant="outline" onClick={saveNewThought} disabled={saving} className="rounded-xl">{saving ? "Saving..." : "Save new thought to Journal"}</Button>
+                  <Button type="button" onClick={onClose} className="rounded-xl">Close</Button>
                 </div>
               </div>
             )}
@@ -282,6 +333,11 @@ export default function ReleaseLetGo({ open, onClose }: ReleaseLetGoProps) {
         @keyframes sproutUp {
           0% { transform: translateY(8px); opacity: 0.6; }
           100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes smokeDrift {
+          0% { opacity: 0.15; }
+          50% { opacity: 0.3; }
+          100% { opacity: 0.15; }
         }
       `}</style>
     </div>
