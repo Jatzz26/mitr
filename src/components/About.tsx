@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShieldCheck, Users, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Reviews from "@/components/about/Reviews";
 
 export default function About() {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ export default function About() {
             ))}
           </div>
         </div>
+        <Reviews />
       </div>
     </section>
   );

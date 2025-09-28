@@ -22,6 +22,12 @@ import Resources from "@/pages/Resources";
 import Counsellors from "@/pages/Counsellors";
 import AboutPage from "@/pages/About";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import Locker from "@/pages/Locker";
+import Devices from "@/pages/Devices";
+import Innovation from "@/pages/Innovation";
+import Community from "@/pages/Community";
+import SymptomChecker from "@/pages/SymptomChecker";
+import Emergency from "@/pages/Emergency";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +65,12 @@ const App = () => (
                 <Route path="/counsellors" element={<ProtectedRoute><Counsellors /></ProtectedRoute>} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/locker" element={<ProtectedRoute><Locker /></ProtectedRoute>} />
+                <Route path="/devices" element={<ProtectedRoute><Devices /></ProtectedRoute>} />
+                <Route path="/innovation" element={<ProtectedRoute><Innovation /></ProtectedRoute>} />
+                <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
+                <Route path="/symptom-checker" element={<ProtectedRoute><SymptomChecker /></ProtectedRoute>} />
+                <Route path="/emergency" element={<Emergency />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

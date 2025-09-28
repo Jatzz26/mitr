@@ -10,7 +10,7 @@ const Hero = () => {
   const [rlgOpen, setRlgOpen] = useState(false);
 
   return (
-    <section className="min-h-screen bg-gradient-calm flex items-center py-20" aria-labelledby="hero-heading">
+    <section className="min-h-screen bg-gradient-calm flex items-center pt-2 pb-16 md:pt-4 md:pb-20" aria-labelledby="hero-heading">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
