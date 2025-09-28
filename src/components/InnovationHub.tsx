@@ -11,6 +11,16 @@ import {
 
 export default function InnovationHub() {
   const [lang, setLang] = useState<"en" | "hi">("en");
+  const routes: Record<string, string> = {
+    dashboard: "/dashboard",
+    symptom: "/symptom-checker",
+    locker: "/locker",
+    lang: "/resources",
+    iot: "/devices",
+    launchpad: "/innovation",
+    community: "/community",
+    emergency: "/emergency",
+  };
 
   const t = useMemo(() => {
     return lang === "hi"
@@ -151,18 +161,21 @@ export default function InnovationHub() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {t.items.map((item) => {
             const Icon = item.icon || Cpu;
+            const href = routes[item.key as keyof typeof routes] || "/";
             return (
-              <Card key={item.key} className="bg-card border border-card-border rounded-xl shadow-card h-full">
-                <CardHeader className="flex flex-row items-center gap-3 pb-2">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <CardTitle className="text-base md:text-lg text-foreground">{item.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
-                </CardContent>
-              </Card>
+              <a key={item.key} href={href} className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-xl">
+                <Card className="bg-card border border-card-border rounded-xl shadow-card h-full transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]">
+                  <CardHeader className="flex flex-row items-center gap-3 pb-2">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <CardTitle className="text-base md:text-lg text-foreground">{item.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </a>
             );
           })}
         </div>
